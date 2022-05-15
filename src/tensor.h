@@ -31,6 +31,7 @@ tensor tensor_scale(tensor t, float s);
 int tensor_broadcastable(tensor a, tensor b);
 tensor tensor_add(tensor a, tensor b);
 tensor tensor_mul(tensor a, tensor b);
+tensor tensor_axpy(float a, tensor x, tensor y);
 
 
 #ifdef __cplusplus

@@ -355,6 +355,45 @@ void tensor_binary_op_(const tensor a, const tensor b, tensor t, void op (const 
     }
 }
 
+void tensor_axpy_(float a, tensor x, tensor y, tensor t)
+{
+    if(t.n == 0){
+        t.data[0] = a * x.data[0] + y.data[0];
+    } else if(t.n == 1){
+        size_t i;
+        size_t incx = (x.size[0] == t.size[0]);
+        size_t incy = (y.size[0] == t.size[0]);
+        for(i = 0; i < t.size[0]; ++i){
+            t.data[i] = a*x.data[i*incx] + y.data[i*incy];
+        }
+    }
+    else {
+        int i = 0;
+        for(i = 0; i < t.size[0]; ++i){
+            int incx = (x.size[0] == t.size[0]);
+            int incy = (y.size[0] == t.size[0]);
+            tensor subx = x;
+            tensor suby = y;
+            if(x.n == t.n){
+                subx = tensor_get_(x, i*incx);
+            }
+            if(y.n == t.n){
+                suby = tensor_get_(y, i*incy);
+            }
+            tensor subt = tensor_get_(t, i);
+            tensor_axpy_(a, subx, suby, subt);
+        }
+    }
+}
+
+tensor tensor_axpy(float a, tensor x, tensor y)
+{
+    tensor t = tensor_broadcast(x, y);
+    if (t.data == 0) return t;
+    tensor_axpy_(a, x, y, t);
+    return t;
+}
+
 void tensor_add_op_(tensor a, tensor b, tensor t)
 {
     t.data[0] = a.data[0] + b.data[0];
@@ -362,10 +401,7 @@ void tensor_add_op_(tensor a, tensor b, tensor t)
 
 tensor tensor_add(tensor a, tensor b)
 {
-    tensor t = tensor_broadcast(a, b);
-    if (t.data == 0) return t;
-    tensor_binary_op_(a, b, t, tensor_add_op_);
-    return t;
+    return tensor_axpy(1, a, b);
 }
 
 void tensor_mul_op_(tensor a, tensor b, tensor t)

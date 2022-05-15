@@ -231,6 +231,8 @@ void test_tensor()
         tensor t4 = tensor_random(1, 2, s4);
         tensor o23 = tensor_add(t2, t3);
         tensor o24 = tensor_add(t2, t4);
+        tensor a23 = tensor_axpy(1, t2, t3);
+        tensor a023 = tensor_axpy(0, t3, t2);
         //tensor_print(t2);
         //tensor_print(t3);
         //tensor_print(t4);
@@ -239,6 +241,9 @@ void test_tensor()
         tensor t1a = tensor_add(t1, t1);
         tensor t1s = tensor_scale(t1, 2);
         TEST(same_tensor(t1a, t1s));
+
+        TEST(same_tensor(a023, t2));
+        TEST(same_tensor(a23, o23));
     }
     {
         int s[2] = {512, 512};
@@ -253,6 +258,15 @@ void test_tensor()
         }
         double end = currtime();
         printf("tensor_add took %f sec\n", end - start);
+        printf("%g sec/op\n", (end-start)/n/(s[0]*s[1]));
+
+        start = currtime();
+        for(i = 0; i < n; ++i){
+            tensor c = tensor_axpy(1, a, b);
+            tensor_free(c);
+        }
+        end = currtime();
+        printf("tensor_axpy took %f sec\n", end - start);
         printf("%g sec/op\n", (end-start)/n/(s[0]*s[1]));
 
         start = currtime();
