@@ -9,22 +9,18 @@ extern "C" {
 
 
 typedef struct tensor {
-    int n;
-    int *size;
+    size_t n;
+    size_t *size;
     float *data;
 } tensor;
 
-tensor tensor_make(const int n, const int *size);
-tensor tensor_vmake(const int n, ...);
-tensor tensor_random(const float s, const int n, const int *size);
+tensor tensor_make(const size_t n, const size_t *size);
+tensor tensor_vmake(const size_t n, ...);
+tensor tensor_random(const float s, const size_t n, const size_t *size);
 void   tensor_free(tensor t);
-tensor tensor_get(const tensor t, const int e);
-int    tensor_len(const tensor t);
+tensor tensor_get(const tensor t, const size_t e);
+size_t    tensor_len(const tensor t);
 
-tensor matrix_multiply(const tensor a, const tensor b);
-tensor matrix_transpose(const tensor a);
-tensor matrix_invert(tensor m);
-tensor solve_system(tensor M, tensor b);
 void tensor_print(tensor t);
 tensor tensor_copy(tensor t);
 tensor tensor_scale(tensor t, float s);

@@ -2,7 +2,7 @@ OPENCV=0
 OPENMP=0
 DEBUG=0
 
-OBJ=tensor.o
+OBJ=tensor.o matrix.o conv.o
 EXOBJ=main.o test.o
 
 VPATH=./src/:./
